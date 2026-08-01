@@ -175,12 +175,6 @@ The application generates:
 
 ---
 
-# License
-
-MIT License
-
----
-
 ## Acknowledgements
 
-The scientific workflow is based on the BHARAT Horn Antenna H I analysis methodology developed by Ashish Mhase. This project is an independent browser-based implementation focused on improving accessibility, modularity, and user experience while reproducing the underlying analysis pipeline.
+The scientific workflow is based on the BHARAT Horn Antenna H I analysis methodology developed by Ashish Mhaske Sir. This project is an independent browser-based implementation focused on improving accessibility, modularity, and user experience while reproducing the underlying analysis pipeline.
