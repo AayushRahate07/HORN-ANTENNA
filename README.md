@@ -1,6 +1,4 @@
-# HORN-ANTENNA
-
-# BHARAT H-I Analysis
+# H-I Analysis Dashboard
 
 A browser-based workstation for processing and visualizing 21 cm neutral hydrogen (H I) radio astronomy observations.
 
