@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>BHARAT HI ANALYSIS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+
+  <body>
+    <div class="app-container">
+      <!-- =========================================================
+         1. HEADER
+    ========================================================== -->
+      <header class="app-header">
+        <div class="brand">
+          <div class="brand-copy">
+            <h1>BHARAT <span>HI LINE ANALYSIS</span></h1>
+            <p>Radio Spectral Workstation</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- =========================================================
+         2. CONTROLS
+    ========================================================== -->
+      <aside class="sidebar">
+        <form id="observation-form">
+          <!-- SCAN FILES -->
+          <section class="control-section">
+            <div class="section-title">
+              <span>01</span>
+              OBSERVATION INPUT
+            </div>
+
+            <div class="file-grid">
+              <div class="file-drop-zone" id="drop-ground">
+                <label for="file-ground">
+                  <div class="file-top">
+                    <span class="file-label">GROUND</span>
+                    <span class="file-type">CSV</span>
+                  </div>
+
+                  <input type="file" id="file-ground" accept=".csv" required />
+
+                  <span class="file-name" id="name-ground"> Select scan </span>
+                </label>
+              </div>
+
+              <div class="file-drop-zone" id="drop-sky">
+                <label for="file-sky">
+                  <div class="file-top">
+                    <span class="file-label">SKY</span>
+                    <span class="file-type">CSV</span>
+                  </div>
+
+                  <input type="file" id="file-sky" accept=".csv" required />
+
+                  <span class="file-name" id="name-sky"> Select scan </span>
+                </label>
+              </div>
+
+              <div class="file-drop-zone" id="drop-source">
+                <div class="source-manager-wrapper">
+                  <label for="file-source" id="source-box">
+                    <div class="file-top">
+                      <span class="file-label">SOURCE</span>
+                      <span class="file-type">CSV</span>
+                    </div>
+
+                    <input
+                      type="file"
+                      id="file-source"
+                      accept=".csv"
+                      multiple
+                    />
+
+                    <span class="file-name" id="name-source">
+                      Select scans
+                    </span>
+                  </label>
+
+                  <div class="source-popup" id="source-popup">
+                    <div class="source-popup-header">
+                      <span>SELECTED SOURCES</span>
+                      <span id="source-count">0</span>
+                    </div>
+
+                    <div class="source-list" id="source-list"></div>
+
+                    <button
+                      type="button"
+                      class="source-add-btn"
+                      id="btn-add-source"
+                    >
+                      + ADD MORE
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- CALIBRATION -->
+          <section class="control-section">
+            <div class="section-title">
+              <span>02</span>
+              CALIBRATION
+            </div>
+
+            <div class="input-row">
+              <div class="input-field">
+                <label for="sky-temp">SKY TEMP</label>
+
+                <div class="input-unit">
+                  <input
+                    type="number"
+                    id="sky-temp"
+                    value="5.0"
+                    step="0.1"
+                    required
+                  />
+                  <span>K</span>
+                </div>
+              </div>
+
+              <div class="input-field">
+                <label for="ground-temp">GROUND TEMP</label>
+
+                <div class="input-unit">
+                  <input
+                    type="number"
+                    id="ground-temp"
+                    value="300.0"
+                    step="0.1"
+                    required
+                  />
+                  <span>K</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- OBSERVATORY -->
+          <section class="control-section">
+            <div class="section-title">
+              <span>03</span>
+              OBSERVATORY
+            </div>
+
+            <div class="input-row">
+              <div class="input-field">
+                <label for="lat">LATITUDE</label>
+                <input
+                  type="number"
+                  id="lat"
+                  value="18.5585349"
+                  step="0.0000001"
+                />
+              </div>
+
+              <div class="input-field">
+                <label for="lon">LONGITUDE</label>
+                <input
+                  type="number"
+                  id="lon"
+                  value="73.8263001"
+                  step="0.0000001"
+                />
+              </div>
+            </div>
+
+            <div class="input-field full-field">
+              <label for="alt">ALTITUDE</label>
+
+              <div class="input-unit">
+                <input type="number" id="alt" value="560" step="1" />
+                <span>m</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- POINTING -->
+          <section class="control-section">
+            <div class="section-title">
+              <span>04</span>
+              SOURCE POINTING
+            </div>
+
+            <div class="input-field full-field">
+              <label for="coords">RA / DEC</label>
+
+              <input
+                type="text"
+                id="coords"
+                value="17 45 40.04 -29 00 28.1"
+                autocomplete="off"
+              />
+            </div>
+          </section>
+
+          <!-- PROCESS -->
+          <button type="submit" id="btn-process" class="btn btn-primary">
+            PROCESS OBSERVATION
+          </button>
+        </form>
+
+        <!-- EXPORT -->
+        <div class="export-section hidden" id="export-section">
+          <button id="btn-export-csv" class="btn btn-secondary">
+            EXPORT PROCESSED CSV
+          </button>
+        </div>
+      </aside>
+
+      <!-- =========================================================
+         3. GRAPH WORKSPACE
+    ========================================================== -->
+      <section class="results-panel">
+        <!-- GRAPH HEADER -->
+        <div class="workspace-header">
+          <div class="tab-header">
+            <button class="tab-btn active" data-tab="tab-vlsr">
+              VELOCITY SPECTRUM
+            </button>
+
+            <button class="tab-btn" data-tab="tab-temp">TEMPERATURE</button>
+
+            <button class="tab-btn" data-tab="tab-power">POWER</button>
+          </div>
+
+          <div class="workspace-meta">H-I 1420.405751 MHz</div>
+        </div>
+
+        <!-- GRAPH BODY -->
+        <div class="graph-area">
+          <div class="tab-content">
+            <div id="tab-vlsr" class="tab-pane active">
+              <div id="plot-vlsr" class="plotly-chart"></div>
+            </div>
+
+            <div id="tab-temp" class="tab-pane">
+              <div id="plot-temp" class="plotly-chart"></div>
+            </div>
+
+            <div id="tab-power" class="tab-pane">
+              <div id="plot-power" class="plotly-chart"></div>
+            </div>
+          </div>
+
+          <!-- EMPTY STATE -->
+          <div id="empty-state" class="empty-state">
+            <div class="empty-crosshair">
+              <div class="crosshair-h"></div>
+              <div class="crosshair-v"></div>
+
+              <div class="crosshair-center"></div>
+            </div>
+
+            <div class="empty-copy">
+              <h3>NO OBSERVATION LOADED</h3>
+
+              <p>
+                Load Ground, Sky and Source scans, then process the observation.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FUTURE SUMMARY STRIP -->
+        <div class="summary-strip">
+          <div class="summary-item">
+            <span>CHANNELS</span>
+            <strong id="summary-channels">---</strong>
+          </div>
+
+          <div class="summary-item">
+            <span>PEAK FREQ</span>
+            <strong id="summary-frequency">--- MHz</strong>
+          </div>
+
+          <div class="summary-item">
+            <span>PEAK Tb</span>
+            <strong id="summary-temp">--- K</strong>
+          </div>
+
+          <div class="summary-item">
+            <span>RADIAL</span>
+            <strong id="summary-radial">--- km/s</strong>
+          </div>
+
+          <div class="summary-item">
+            <span>VLSR</span>
+            <strong id="summary-vlsr">--- km/s</strong>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
